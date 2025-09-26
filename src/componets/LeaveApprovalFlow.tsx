@@ -10,7 +10,7 @@ const approvers = [
 
 export default function LeaveApprovalFlow() {
   return (
-    <div className="flex flex-col items-center space-y-10">
+    <div className="flex flex-col">
       {/* Flow Path */}
       <div className="flex justify-between w-full max-w-4xl relative">
         <svg className="absolute top-8 left-0 w-full h-32" fill="none">
@@ -26,7 +26,7 @@ export default function LeaveApprovalFlow() {
         {approvers.map((item, i) => (
           <div key={i} className="flex flex-col items-center space-y-2 relative">
             <motion.div
-              className={`w-14 h-14 rounded-full border-2 flex items-center justify-center overflow-hidden shadow-md 
+              className={`w-10 h-10 rounded-full border-2 flex items-center justify-center overflow-hidden shadow-md 
                 ${item.active ? "border-green-500 ring-2 ring-green-400" : "border-gray-300"}`}
               whileHover={{ scale: 1.1 }}
             >
@@ -36,19 +36,7 @@ export default function LeaveApprovalFlow() {
           </div>
         ))}
       </div>
-
-      {/* Instruction */}
-      <p className="text-gray-500 text-sm">Check Details, Then Approve or Reject</p>
-
-      {/* Buttons */}
-      <div className="flex space-x-4">
-        <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg shadow-md">
-          Reject Leave
-        </button>
-        <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow-md">
-          Approve Leave
-        </button>
-      </div>
+   
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import LeaveApprovalFlow from "./LeaveApprovalFlow";
+import LeaveActionButtons from "./LeaveActionButtons";
 
 const CenteredBox: React.FC = () => {
   return (
@@ -29,19 +30,29 @@ const CenteredBox: React.FC = () => {
             borderTop: "1px solid #43C8FF",
           }}
         ></div>
+<div
+  className="absolute opacity-100 border-1"
+  style={{
+    width: "43.3vw",
+    height: "43.9vh",
+    top: "134px",
+    left: "61px",
+    transform: "rotate(0deg)",
+  }}
+>
+  {/* Leave Approval Flow content */}
+  <LeaveApprovalFlow />
 
-        <div
-          className="absolute opacity-100 border-1"
-          style={{
-            width: "43.3vw",
-            height: "43.9vh",
-            top: "134px",
-            left: "61px",
-            transform: "rotate(0deg)",
-          }}
-        >
-          <LeaveApprovalFlow/>
-        </div>
+  {/* Leave Action Buttons positioned at bottom-right */}
+  <div className="absolute bottom-0 right-0">
+  <p className="font-poppins font-normal text-base leading-[1.3] tracking-normal text-[#000000] text-center mb-4"> Check Details, Then Approve or Reject </p>
+    <LeaveActionButtons
+      onApprove={() => alert("Leave Approved")}
+      onReject={() => alert("Leave Rejected")}
+    />
+  </div>
+</div>
+
 
         
 
