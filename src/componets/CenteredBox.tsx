@@ -31,11 +31,11 @@ const CenteredBox: React.FC = () => {
           }}
         ></div>
 <div
-  className="absolute opacity-100 border-1"
+  className="absolute opacity-100"
   style={{
     width: "43.3vw",
     height: "43.9vh",
-    top: "134px",
+    top: "110px",
     left: "61px",
     transform: "rotate(0deg)",
   }}
@@ -43,7 +43,7 @@ const CenteredBox: React.FC = () => {
   {/* Leave Approval Flow content */}
   <LeaveApprovalFlow />
 
-  {/* Leave Action Buttons positioned at bottom-right */}
+  {/* Leave Action Buttons  */}
   <div className="absolute bottom-0 right-0">
   <p className="font-poppins font-normal text-base leading-[1.3] tracking-normal text-[#000000] text-center mb-4"> Check Details, Then Approve or Reject </p>
     <LeaveActionButtons

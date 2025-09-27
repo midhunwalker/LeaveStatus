@@ -77,13 +77,13 @@ export default function LeaveApprovalFlow() {
     ? height / (approvers.length + 0.5)
     : width / (approvers.length + 0.3);
 
-  // positioning pattern: center → below → above → below → center
+  // positioning pattern: center, below, above, below, center
   const getOffset = (i: number) => {
     const cycle = i % 5;
     if (cycle === 0) return 0;
-    if (cycle === 1) return isMobile ? step * 0.3 : 80;
-    if (cycle === 2) return isMobile ? -step * 0.3 : -80;
-    if (cycle === 3) return isMobile ? step * 0.3 : 80;
+    if (cycle === 1) return isMobile ? step * 0.3 : 90;
+    if (cycle === 2) return isMobile ? -step * 0.3 : -90;
+    if (cycle === 3) return isMobile ? step * 0.3 : 90;
     if (cycle === 4) return 0;
     return 0;
   };
@@ -99,19 +99,22 @@ export default function LeaveApprovalFlow() {
 
       if (!start || !end) continue;
 
-      // Calculate control points for cubic Bezier curve
+      // Calculate curves
       const dx = end.centerX - start.centerX;
       const dy = end.centerY - start.centerY;
       
-      // Control points for smooth cubic Bezier curve
-      const controlX1 = start.centerX + dx * 0.4;
-      const controlY1 = start.centerY;
-      const controlX2 = end.centerX - dx * 0.4;
-      const controlY2 = end.centerY;
+      //control points for  curves
+      const curveIntensity = 1;
+      
+      // Control points that create curves
+      const controlX1 = start.centerX + dx * curveIntensity;
+      const controlY1 = start.centerY + dy * 0.6;
+      const controlX2 = end.centerX - dx * curveIntensity;
+      const controlY2 = end.centerY - dy * 0.4;
 
       const d = `M ${start.centerX} ${start.centerY} C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${end.centerX} ${end.centerY}`;
 
-      // Special styling for Employee → Team Lead connection
+      //styling for Employee to Team Lead connection
       const isEmployeeToTeamLead = i === 0;
       
       paths.push(
@@ -126,7 +129,7 @@ export default function LeaveApprovalFlow() {
           style={{
             filter: isEmployeeToTeamLead 
               ? "drop-shadow(0px 0px 8px #31ED31)" 
-              : "drop-shadow(0px 8px 4px rgba(0, 0, 0, 0.25))",
+              : "",
           }}
         />
       );
@@ -140,19 +143,19 @@ export default function LeaveApprovalFlow() {
       ref={containerRef} 
       className="relative w-full h-full overflow-visible"
     >
-      {/* Road map lines with Bezier curves */}
+      {/*lines */}
       <svg className="absolute left-0 top-0 w-full h-full" fill="none">
         {buildPaths()}
       </svg>
 
-      {/* Approvers */}
+      
       <div
         className={`flex relative h-full ${
           isMobile ? "flex-col items-center" : "items-center"
         }`}
         style={{
-          paddingLeft: isMobile ? 0 : "50px",
-          paddingTop: isMobile ? "50px" : "5px",
+          paddingLeft: isMobile ? 0 : "20px", 
+          paddingTop: isMobile ? "0px" : "0px", 
           gap: isMobile ? `${step * 0.8}px` : `${step - 40}px`,
         }}
       >
@@ -162,8 +165,8 @@ export default function LeaveApprovalFlow() {
             ? `translateX(${offset}px)`
             : `translateY(${offset}px)`;
 
-          // Special glow for Employee and Team Lead
-          const isSpecialNode = i === 0 || i === 1; // Employee or Team Lead
+          
+          const isSpecialNode = i === 0 || i === 1;
 
           return (
             <div
@@ -178,16 +181,16 @@ export default function LeaveApprovalFlow() {
                 className={`w-10 h-10 rounded-full border-2 flex items-center justify-center overflow-hidden relative
                   ${
                     item.active
-                      ? "border-green-500 bg-green-50"
-                      : "border-gray-300 bg-gray-100"
+                      ? "border-gray-300 bg-green-50"
+                      : "border-gray-300 bg-gray-100 "
                   }`}
                 whileHover={{ scale: 1.05 }}
                 onHoverStart={measureNodes}
                 onHoverEnd={measureNodes}
                 style={{
                   boxShadow: isSpecialNode 
-                    ? "0px 0px 12px #31ED31, 0px 4px 8px rgba(0, 0, 0, 0.15)" 
-                    : "0px 4px 8px rgba(0, 0, 0, 0.15)",
+                    ? "0px 0px 12px  0px 4px 8px rgba(49, 237, 49, 1)" 
+                    : "0px 0px 12px  0px 4px 8px rgba(77, 77, 77, 1)",
                 }}
               >
                 <img
@@ -197,9 +200,13 @@ export default function LeaveApprovalFlow() {
                   onLoad={measureNodes}
                 />
                 
-                {/* Green ring for active special nodes */}
+                {/* Green ring for active nodes */}
                 {isSpecialNode && item.active && (
-                  <div className="absolute inset-0 rounded-full border-2 border-#31ED31 animate-pulse" />
+                  <div className="absolute inset-0 rounded-full border-2 border-[#FCFCFC]  " />
+                )}
+
+                {!item.active && (
+                  <div className="absolute inset-0 rounded-full   shadow-[#4D4D4D]" />
                 )}
               </motion.div>
               
