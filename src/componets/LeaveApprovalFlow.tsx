@@ -37,7 +37,6 @@ export default function LeaveApprovalFlow() {
       const rect = node.getBoundingClientRect();
       const containerRect = containerRef.current!.getBoundingClientRect();
 
-      // Only store the center point
       positions[index] = {
         centerX: rect.left - containerRect.left + rect.width / 2,
         centerY: rect.top - containerRect.top + rect.height / 2,
@@ -100,17 +99,35 @@ export default function LeaveApprovalFlow() {
 
       if (!start || !end) continue;
 
-      // Connect directly from center to center
-      const d = `M ${start.centerX} ${start.centerY} L ${end.centerX} ${end.centerY}`;
+      // Calculate control points for cubic Bezier curve
+      const dx = end.centerX - start.centerX;
+      const dy = end.centerY - start.centerY;
+      
+      // Control points for smooth cubic Bezier curve
+      const controlX1 = start.centerX + dx * 0.4;
+      const controlY1 = start.centerY;
+      const controlX2 = end.centerX - dx * 0.4;
+      const controlY2 = end.centerY;
 
+      const d = `M ${start.centerX} ${start.centerY} C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${end.centerX} ${end.centerY}`;
+
+      // Special styling for Employee → Team Lead connection
+      const isEmployeeToTeamLead = i === 0;
+      
       paths.push(
         <path
           key={i}
           d={d}
-          stroke="#94a3b8"
-          strokeDasharray="4 4"
-          strokeWidth="1.5"
+          stroke={isEmployeeToTeamLead ? "#31ED31" : "#4D4D4D"}
+          strokeDasharray="9 9"
+          strokeWidth="2"
           fill="transparent"
+          strokeLinecap="round"
+          style={{
+            filter: isEmployeeToTeamLead 
+              ? "drop-shadow(0px 0px 8px #31ED31)" 
+              : "drop-shadow(0px 8px 4px rgba(0, 0, 0, 0.25))",
+          }}
         />
       );
     }
@@ -119,8 +136,11 @@ export default function LeaveApprovalFlow() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-full overflow-visible">
-      {/* Dotted connecting lines */}
+    <div 
+      ref={containerRef} 
+      className="relative w-full h-full overflow-visible"
+    >
+      {/* Road map lines with Bezier curves */}
       <svg className="absolute left-0 top-0 w-full h-full" fill="none">
         {buildPaths()}
       </svg>
@@ -142,6 +162,9 @@ export default function LeaveApprovalFlow() {
             ? `translateX(${offset}px)`
             : `translateY(${offset}px)`;
 
+          // Special glow for Employee and Team Lead
+          const isSpecialNode = i === 0 || i === 1; // Employee or Team Lead
+
           return (
             <div
               key={i}
@@ -152,15 +175,20 @@ export default function LeaveApprovalFlow() {
               style={{ transform }}
             >
               <motion.div
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center overflow-hidden shadow-sm
+                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center overflow-hidden relative
                   ${
                     item.active
-                      ? "border-green-500 ring-1 ring-green-300 bg-green-50"
-                      : "border-gray-200 bg-gray-50"
+                      ? "border-green-500 bg-green-50"
+                      : "border-gray-300 bg-gray-100"
                   }`}
                 whileHover={{ scale: 1.05 }}
                 onHoverStart={measureNodes}
                 onHoverEnd={measureNodes}
+                style={{
+                  boxShadow: isSpecialNode 
+                    ? "0px 0px 12px #31ED31, 0px 4px 8px rgba(0, 0, 0, 0.15)" 
+                    : "0px 4px 8px rgba(0, 0, 0, 0.15)",
+                }}
               >
                 <img
                   src={item.img}
@@ -168,9 +196,20 @@ export default function LeaveApprovalFlow() {
                   className="w-full h-full object-cover"
                   onLoad={measureNodes}
                 />
+                
+                {/* Green ring for active special nodes */}
+                {isSpecialNode && item.active && (
+                  <div className="absolute inset-0 rounded-full border-2 border-#31ED31 animate-pulse" />
+                )}
               </motion.div>
               
-              <span className="text-xs text-gray-600 font-medium whitespace-nowrap text-center px-1">
+              <span 
+                className="text-xs font-medium whitespace-nowrap text-center px-1"
+                style={{
+                  color: "#4D4D4D",
+                  textShadow: "0px 2px 2px rgba(0, 0, 0, 0.1)",
+                }}
+              >
                 {item.role}
               </span>
             </div>
