@@ -189,8 +189,8 @@ export default function LeaveApprovalFlow() {
                 onHoverEnd={measureNodes}
                 style={{
                   boxShadow: isSpecialNode 
-                    ? "0px 0px 12px  0px 4px 8px rgba(49, 237, 49, 1)" 
-                    : "0px 0px 12px  0px 4px 8px rgba(77, 77, 77, 1)",
+                    ? "0px 0px 10px 4px  rgba(49, 237, 49, 1)" 
+                    : "1px 1px 10px 2px  rgba(77, 77, 77, 1)",
                 }}
               >
                 <img
